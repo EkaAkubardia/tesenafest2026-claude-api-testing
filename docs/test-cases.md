@@ -2,7 +2,7 @@
 
 Source: `Test Cases for automation.md` (written by testers). This document adds the steps, expected results, test data and cleanup that the automation follows.
 
-**Status: draft - waiting for test owner approval. No test code is written until this is approved.**
+**Status: approved by the test owner on 2026-09-24.**
 
 ## Conventions
 
@@ -251,7 +251,7 @@ To confirm: the API rejects an unreadable `due_string` with 400 instead of creat
 
 ## Approval
 
-- [ ] TC-007 field list approved
-- [ ] TC-009 approach (English, "tomorrow", account timezone) approved
-- [ ] TC-015 cases approved
-- [ ] All steps and expected results approved by the test owner
+- [x] TC-007 field list approved
+- [x] TC-009 approach (English, "tomorrow", account timezone) approved
+- [x] TC-015 cases approved
+- [x] All steps and expected results approved by the test owner
