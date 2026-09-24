@@ -1,0 +1,8 @@
+# Convenience guard only - the GitHub ruleset is the real protection of main.
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$branch" = "main" ]; then
+  echo "Direct commits to main are not allowed. Create an issue, a branch and a PR."
+  exit 1
+fi
+
+npx lint-staged
