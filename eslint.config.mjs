@@ -17,6 +17,8 @@ export default defineConfig(
       // A missing `await` on an API call is the most common async test bug.
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/await-thenable': 'error',
+      // Allows `const { secret: _secret, ...rest } = obj` to drop a field.
+      '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
     },
   },
   {

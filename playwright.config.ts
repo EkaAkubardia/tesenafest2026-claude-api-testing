@@ -3,11 +3,17 @@ import { env } from './src/config/env';
 
 const isCI = !!process.env.CI;
 
+// One id per run for test data names. Set here once; workers inherit it.
+process.env.TEST_RUN_ID ??= new Date().toISOString().replace(/[-:]/g, '').slice(0, 15);
+
 const reporter: ReporterDescription[] = [['list'], ['html', { open: 'never' }]];
 if (isCI) reporter.push(['github']);
 
 export default defineConfig({
   testDir: './tests',
+  // Sweep autotest-* leftovers before and after the run.
+  globalSetup: './tests/global-sweep.ts',
+  globalTeardown: './tests/global-sweep.ts',
   // All runs share one Todoist account, so tests run one at a time.
   fullyParallel: false,
   workers: 1,
