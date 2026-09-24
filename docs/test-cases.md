@@ -12,7 +12,7 @@ Source: `Test Cases for automation.md` (written by testers). This document adds 
 - **Priority** - the API uses 1 (normal) .. 4 (urgent). The app shows it the other way round: API 4 = "P1" in the app.
 - **Dates** - explicit dates use `YYYY-MM-DD`. Dates in words use English (`due_lang: en`). Todoist reads them in the **account's timezone**, so tests compare two server results with each other, never with the clock of the CI machine.
 - **Free plan** - only features available on a free account are used.
-- **To confirm** marks behaviour the API documentation doesn't state clearly. It is checked against the live API in the next step. If reality differs, the test owner decides whether the expected result changes or it is reported as a bug.
+- **Confirmed** marks behaviour the API documentation doesn't state clearly, checked against the live API on 2026-09-24 (free account). Where reality differed, the test owner decides whether the expected result changes or it is reported as a bug.
 
 | Wave | Test cases | Tags |
 |---|---|---|
@@ -73,7 +73,7 @@ Tags: `@TC-004 @smoke @regression`
 | 2 | Load the label by its `id` | 200; `name` = the entered name |
 
 Cleanup: delete the label.
-To confirm: personal labels can be created through the API on a free account.
+Confirmed: personal labels can be created through the API on a free account.
 
 ### TC-005 [Comments] A comment is added to a task with the text that was entered
 
@@ -82,12 +82,13 @@ Tags: `@TC-005 @smoke @regression`
 | # | Step | Expected result |
 |---|---|---|
 | 1 | Create a test project and a task in it | 200 |
-| 2 | Add a comment to the task with content `autotest-<runId>-comment` | 200; `content` = the entered text, `task_id` = the task |
+| 2 | Add a comment to the task with content `autotest-<runId>-comment` | 200; `content` = the entered text, `item_id` = the task (the response calls the task `item_id`) |
 | 3 | Load the comment by its `id` | 200; `content` = the entered text |
-| 4 | Load the task | `note_count` = 1 |
+| 4 | Load the comments of the task | exactly this one comment |
 
 Cleanup: delete the project (the task and its comments go with it).
-To confirm: comments are available through the API on a free account.
+Confirmed: comments are available through the API on a free account.
+**Changed - needs test owner approval:** step 4 originally checked the task's `note_count` = 1. On the live API `note_count` stays 0, even with 2 comments and after 5 seconds, while the comment list returns both. Proposal: step 4 checks the comment list instead, and `note_count` is reported as a possible bug to decide separately.
 
 ---
 
@@ -128,7 +129,7 @@ Part B - all optional fields
 | 2 | Create a task with `content`, `description` = "autotest description", `project_id` = the test project, `parent_id` = the parent task, `priority` = 3, `labels` = [`autotest-<runId>-a`, `autotest-<runId>-b`], `due_date` = today + 3 days | 200 |
 | 3 | Load the task | each field equals exactly what was entered; `labels` contains both names (order doesn't matter) |
 
-Cleanup: delete the Inbox task (part A), delete the project (part B). To confirm: whether labels given by name on a task create personal labels. If they do, delete them too.
+Cleanup: delete the Inbox task (part A), delete the project (part B). Confirmed: labels given by name on a task are stored on the task but do **not** create personal labels, so there is nothing extra to delete.
 
 ### TC-008 [Tasks] A project's task list contains only the tasks of that project, nothing from elsewhere
 
@@ -177,7 +178,7 @@ Tags: `@TC-011 @e2e @regression`
 | 8 | Load task 3 by `id` | `checked` = false |
 
 Cleanup: delete the project.
-To confirm: completed tasks can still be loaded by `id` with `checked` = true. If not, step 7 uses the completed tasks endpoint (`/tasks/completed/by_completion_date`).
+Confirmed: completed tasks can still be loaded by `id` and have `checked` = true.
 
 ---
 
@@ -245,7 +246,7 @@ Proposal: `content` is the only required field, so "no text" and "required field
 
 Each case runs as its own step, so the report shows exactly which one failed.
 Cleanup: delete the project.
-To confirm: the API rejects an unreadable `due_string` with 400 instead of creating a task without a due date.
+Confirmed: all three cases (empty content, missing content, unreadable `due_string`) return 400.
 
 ---
 
